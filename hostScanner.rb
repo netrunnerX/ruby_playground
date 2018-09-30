@@ -1,5 +1,7 @@
 #!/usr/bin/env ruby
 
+#This script scans the local network looking for alive hosts
+
 require 'packetgen'
 require 'packetgen/config'
 require 'ip_admin'
