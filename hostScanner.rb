@@ -69,17 +69,16 @@ if $0 == __FILE__
     }
 
     ipsToScan.each { | targetIp |
+        
+        #Send Eth packet with ARP header
+        PacketGen::Packet.gen('Eth', src: mac, dst: 'ff:ff:ff:ff:ff:ff')
+                        .add('ARP', spa: ip, 
+                                    tpa: targetIp, 
+                                    sha: mac, 
+                                    tha: 'ff:ff:ff:ff:ff:ff', 
+                                    op: 'request')
+        .to_w(iface)
 
-        #Spam 5 ARP packets
-        #5.times do
-            PacketGen::Packet.gen('Eth', src: mac, dst: 'ff:ff:ff:ff:ff:ff')
-                            .add('ARP', spa: ip, 
-                                        tpa: targetIp, 
-                                        sha: mac, 
-                                        tha: 'ff:ff:ff:ff:ff:ff', 
-                                        op: 'request')
-            .to_w(iface)
-        #end
     }
 
     thread.join
