@@ -28,7 +28,7 @@ if $0 == __FILE__
     iface = config.default_iface
     ip = config.ipaddr
     mac = config.hwaddr
-    gateway = gw = `ip route show`[/default.*/][/\d+\.\d+\.\d+\.\d+/]
+    gateway = `ip route show`[/default.*/][/\d+\.\d+\.\d+\.\d+/]
 
     #Getting the netmask
     netmask = ""
