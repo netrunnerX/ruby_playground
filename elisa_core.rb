@@ -142,8 +142,6 @@ class ElisaCore
     end
 
     def addTarget()
-        return puts "No target selected\n" if @targetIp.nil?
-    
         @spoofer.add(@targetIp,@gateway)
         @spoofer.add(@gateway,@targetIp)
     end
