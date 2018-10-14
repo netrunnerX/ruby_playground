@@ -79,12 +79,12 @@ while option != "0" do
         end
     when "4"
         core.startSpoofing
-        puts "\nAPR spoofing started!"
+        puts "\nARP spoofing started!"
     when "5"
         core.checkActiveSpoofings
     when "6"
         core.stopSpoofing
-        puts "\nAPR spoofing stoped!"
+        puts "\nARP spoofing stoped!"
     else
         puts "\nInvalid option\n"
     end
