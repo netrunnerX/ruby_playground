@@ -21,6 +21,9 @@ def selectTarget(aliveIps)
 
         if opt > 0 && opt <= aliveIps.length
             return aliveIps[opt-1]
+        else
+            puts "\nInvalid option\n"
+            return nil
         end
     else
         puts "\nInvalid option\n"
