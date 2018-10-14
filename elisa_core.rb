@@ -80,7 +80,6 @@ class ElisaCore
     
         timeoutSecs = 20
         puts "Scanning... (this takes #{timeoutSecs} seconds)"
-        #TODO - Config ready, it's time to scan
     
         thread = Thread.new {
             Thread.current['packets'] = PacketGen.capture(iface: @iface, 
